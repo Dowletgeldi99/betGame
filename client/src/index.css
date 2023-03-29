@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+/* Range Slider as a Single Thumb Slider */
+.single-thumb .range-slider__thumb[data-lower] {
+    width: 0;
+}
+
+.single-thumb .range-slider__thumb {
+    width: 10px;
+}
+
+.single-thumb .range-slider__range {
+    border-radius: 6px;
+}

@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  react-app:
+    image: react-app
+    stdin_open: true
+    ports:
+      - "5173:5173"
+    networks:
+      - mern-app
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/redux/client
+      - /redux/client/node_modules
+  api-server:
+    image: api-server
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - mern-app
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    env_file:
+      - ./server/.env
+    volumes:
+      - ./server:/app/server
+      - /app/server/node_modules
+    #      - ./server:/redux/server
+    #      - /redux/server/node_modules
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+      target: development
+    command: npm run start:dev
+  mongo:
+    image: mongo:4.4.6
+    platform: linux/amd64
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root1
+      - MONGO_INITDB_ROOT_PASSWORD=password1234
+    ports:
+      - "27019:27017"
+    networks:
+      - mern-app
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+networks:
+  mern-app:
+    driver: bridge
+volumes:
+  mongo-data:
